@@ -1,0 +1,27 @@
+{
+  "name": "barcode-reader",
+  "version": "1.0.0",
+  "description": "Barcode reader.",
+  "main": "index.js",
+  "scripts": {
+    "build:wasm": "./build.sh",
+    "build:bundle": "webpack",
+    "build": "NODE_ENV=dev  npm run build:wasm && NODE_ENV=dev npm run build:bundle",
+    "prod": "NODE_ENV=prod  npm run build:wasm && NODE_ENV=prod npm run build:bundle",
+    "serve": "NODE_ENV=dev webpack-dev-server --hot",
+    "start": "npm run build && npm run serve"
+  },
+  "author": "Jeremy Oden",
+  "license": "MIT",
+  "devDependencies": {
+    "exports-loader": "^0.7.0",
+    "file-loader": "^6.0.0",
+    "http-server": "^0.12.3",
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.11",
+    "webpack-dev-server": "^3.11.0",
+    "worker-loader": "^2.0.0",
+    "babel-loader": "^8.1.0",
+    "html-webpack-plugin": "^4.3.0"
+  }
+}

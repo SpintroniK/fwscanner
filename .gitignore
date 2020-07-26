@@ -1,0 +1,5 @@
+main
+scan.wasm.map
+node_modules
+dist
+ZBar

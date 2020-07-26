@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+	<head>
+        <title>Barcode</title>
+		<meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="chrome=1">
+        <link rel="apple-touch-icon" sizes="128x128" href="images/icons/icon-128x128.png">
+        <script>
+            const checkVersion = function() 
+            {
+                var agent = window.navigator.userAgent,
+                start = agent.indexOf('OS ');
+                if((agent.indexOf('iPhone') > -1 || agent.indexOf('iPad') > -1 ) && start > -1 )
+                {
+                    return parseFloat(agent.substr(start + 3, 4).replace( '_', '.' ));
+                }
+                return Number.MAX_SAFE_INTEGER;
+            }
+
+            const baseUrl = new URL('./', document.baseURI).href;
+ 
+            fetch(`manifest.json`)
+            .then(
+                resp => resp.json(),
+                error => console.error(error)
+            )
+            .then(
+                j => 
+                {
+                    const h = document.getElementsByTagName('head')[0];
+                    const l = document.createElement('link');
+                    l.rel = 'manifest';
+
+                    j.start_url = baseUrl + j.start_url;
+                    j.icons.map(i => i.src = baseUrl + i.src);
+
+                    if(checkVersion() < 13.4)
+                        j.display = 'browser';
+
+                    const stringManifest = JSON.stringify(j);
+                    const blob = new Blob([stringManifest], {type: 'application/json'});
+                    const manifestURL = URL.createObjectURL(blob);
+                    l.href = manifestURL;
+                    h.appendChild(l);
+                },
+                error => console.error(error)
+            )
+        </script>
+        <script>
+            if(window.matchMedia('(display-mode: standalone)').matches) 
+            {
+                console.log("Thank you for installing our app!");
+            }
+
+            // For debug purposes only
+
+        </script>
+        <style>
+            
+            html, body 
+            {
+                height: 100%;
+            }
+
+            #container 
+            {
+                text-align: center;
+                width: 100%;
+                height: 100%;
+            }
+
+            video
+            {
+                border: 2px solid green;
+            }
+
+            #displayCanvas
+            {
+                border: 2px solid red;
+                background-color: black;
+            }
+
+
+            #displayCanvas
+            {
+                width: 70vw;
+            }
+        </style>
+    </head>
+    </head>
+    <body>
+        <!-- <div id="status"></div> -->
+        <div style="color: red" id="result"></div>
+        <div id="info"></div>
+        <div id="cameras"></div>
+        <div id="container">
+            <canvas id="displayCanvas"></canvas>
+        </div>
+    </body>
+</html>
