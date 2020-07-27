@@ -3,3 +3,5 @@ scan.wasm.map
 node_modules
 dist
 ZBar
+scan.wasm
+scan.js

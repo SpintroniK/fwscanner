@@ -6,22 +6,24 @@
   "scripts": {
     "build:wasm": "./build.sh",
     "build:bundle": "webpack",
-    "build": "NODE_ENV=dev  npm run build:wasm && NODE_ENV=dev npm run build:bundle",
-    "prod": "NODE_ENV=prod  npm run build:wasm && NODE_ENV=prod npm run build:bundle",
+    "build": "NODE_ENV=dev  yarn build:wasm && NODE_ENV=dev yarn build:bundle",
+    "prod": "NODE_ENV=prod  yarn build:wasm && NODE_ENV=prod yarn build:bundle",
     "serve": "NODE_ENV=dev webpack-dev-server --hot",
-    "start": "npm run build && npm run serve"
+    "start": "yarn build && yarn serve"
   },
   "author": "Jeremy Oden",
   "license": "MIT",
   "devDependencies": {
+    "@babel/core": "^7.10.5",
+    "@babel/preset-env": "^7.10.4",
+    "babel-loader": "^8.1.0",
     "exports-loader": "^0.7.0",
     "file-loader": "^6.0.0",
+    "html-webpack-plugin": "^4.3.0",
     "http-server": "^0.12.3",
     "webpack": "^4.43.0",
     "webpack-cli": "^3.3.11",
     "webpack-dev-server": "^3.11.0",
-    "worker-loader": "^2.0.0",
-    "babel-loader": "^8.1.0",
-    "html-webpack-plugin": "^4.3.0"
+    "worker-loader": "^2.0.0"
   }
 }
