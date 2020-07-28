@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import App from './vue/App.vue'
+import App from '../vue/App.vue'
 import Camera from './cameras.js';
 import BarcodeReader from './barcode.js';
 Vue.config.productionTip = false

@@ -10,7 +10,7 @@ module.exports =
 {
     mode: dev? "development" : "production",
     context: path.resolve(__dirname, "."),
-    entry: "./index.js",
+    entry: "./js/index.js",
     output: 
     {
         path: path.resolve(__dirname, "dist"),
