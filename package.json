@@ -4,11 +4,11 @@
   "description": "Barcode reader.",
   "main": "index.js",
   "scripts": {
-    "build:wasm": "./build.sh",
+    "build:wasm": "./cpp/build.sh",
     "build:bundle": "webpack --progress",
     "build": "NODE_ENV=dev  yarn build:wasm && NODE_ENV=dev yarn build:bundle",
     "prod": "NODE_ENV=prod  yarn build:wasm && NODE_ENV=prod yarn build:bundle",
-    "serve": "NODE_ENV=dev webpack-dev-server --hot",
+    "serve": "NODE_ENV=dev webpack-dev-server --hot --host 0.0.0.0",
     "start": "yarn build && yarn serve"
   },
   "author": "Jeremy Oden",

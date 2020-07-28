@@ -18,12 +18,12 @@ if [ "$NODE_ENV" != "dev" ]; then
     -s INLINING_LIMIT=1 \
     -s AGGRESSIVE_VARIABLE_ELIMINATION=1 \
     -s DISABLE_EXCEPTION_CATCHING=1 \
-    -I `pwd`/ZBar/include -L. \
+    -I `pwd`/ZBar/include -L`pwd`/cpp \
     --memory-init-file 0 \
     --js-opts 1 --closure 1 --llvm-lto 3 \
     -DEMSCRIPTEN_HAS_UNBOUND_TYPE_NAMES=0 \
     -fno-rtti -flto \
-    -std=c++17 -Oz -g0 -v -o scan.js scan_bind.cpp -lzbar
+    -std=c++17 -Oz -g0 -v -o ./js/scan.js ./cpp/scan_bind.cpp -lzbar
 else
     em++ \
     --bind \
@@ -39,9 +39,9 @@ else
     -s EXPORT_NAME="BarcodeScanner" \
     -s AGGRESSIVE_VARIABLE_ELIMINATION=0 \
     -s DISABLE_EXCEPTION_CATCHING=0 \
-    -I `pwd`/ZBar/include -L. \
+    -I `pwd`/ZBar/include -L`pwd`/cpp \
     --memory-init-file 0 --source-map-base ./ \
-    -std=c++17 -O0 -g4 -v -o scan.js scan_bind.cpp -lzbar
+    -std=c++17 -O0 -g4 -v -o ./js/scan.js ./cpp/scan_bind.cpp -lzbar
 fi
 
 

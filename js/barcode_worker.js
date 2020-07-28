@@ -1,5 +1,5 @@
-import scan from '../scan.js';
-import scanModule from '../scan.wasm';
+import scan from './scan.js';
+import scanModule from './scan.wasm';
 
 
 // Since webpack will change the name and potentially the path of the 
