@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build:wasm": "./build.sh",
-    "build:bundle": "webpack",
+    "build:bundle": "webpack --progress",
     "build": "NODE_ENV=dev  yarn build:wasm && NODE_ENV=dev yarn build:bundle",
     "prod": "NODE_ENV=prod  yarn build:wasm && NODE_ENV=prod yarn build:bundle",
     "serve": "NODE_ENV=dev webpack-dev-server --hot",
@@ -21,6 +21,7 @@
     "file-loader": "^6.0.0",
     "html-webpack-plugin": "^4.3.0",
     "http-server": "^0.12.3",
+    "vue-loader": "^15.9.3",
     "webpack": "^4.43.0",
     "webpack-cli": "^3.3.11",
     "webpack-dev-server": "^3.11.0",

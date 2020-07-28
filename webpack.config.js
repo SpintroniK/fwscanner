@@ -2,6 +2,7 @@ const webpack = require("webpack")
 const path = require("path")
 const TerserPlugin = require('terser-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const VueLoaderPlugin = require('vue-loader/lib/plugin')
 
 const dev = process.env.NODE_ENV === 'dev'
 
@@ -29,6 +30,10 @@ module.exports =
         rules: 
         [
             {
+                test: /\.vue$/,
+                loader: 'vue-loader'
+            },
+            {
                 test: /\.js$/,
                 loader: 'babel-loader'
             },
@@ -54,7 +59,7 @@ module.exports =
     },
     plugins: 
     [
-
+        new VueLoaderPlugin(),
         new HtmlWebpackPlugin( { template: 'index.html' } ),
         new TerserPlugin
             ({
