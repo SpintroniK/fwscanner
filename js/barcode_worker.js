@@ -22,7 +22,7 @@ let processing = false;
 let imagep = null;
 let resultsBuffer = [];
 
-var document = {}
+// var document = {}
 
 let BarcodeModule = {};
 let Scanner = {};

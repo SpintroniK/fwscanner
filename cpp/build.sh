@@ -40,7 +40,7 @@ else
     -s AGGRESSIVE_VARIABLE_ELIMINATION=0 \
     -s DISABLE_EXCEPTION_CATCHING=0 \
     -I `pwd`/ZBar/include -L`pwd`/cpp \
-    --memory-init-file 0 --source-map-base ./ \
+    --memory-init-file 0 --source-map-base ./js \
     -std=c++17 -O0 -g4 -v -o ./js/scan.js ./cpp/scan_bind.cpp -lzbar
 fi
 
