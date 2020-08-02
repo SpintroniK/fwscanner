@@ -152,9 +152,14 @@ export default {
 
       const barcordReader = new BarcodeReader({drawRect: true, drawingCanvas: displayCanvas});
       
-      const resultCallback = data => 
+      const resultCallback = async d => 
       {
-          this.barcode = data.barcode
+          const response = await fetch(`https://world.openfoodfacts.org/api/v0/product/${d.barcode}.json`)
+          const data = await response.json()
+
+          console.log(data.product.product_name)
+
+          this.barcode = data.product.product_name
           this.displayProduct = true
       };
 
