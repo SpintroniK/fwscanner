@@ -1,13 +1,13 @@
-const webpack = require("webpack")
 const path = require("path")
 const TerserPlugin = require('terser-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 
 const dev = process.env.NODE_ENV === 'dev'
 
-module.exports = 
-{
+const appConfig = {
     mode: dev? "development" : "production",
     context: path.resolve(__dirname, "."),
     entry: "./js/index.js",
@@ -38,6 +38,14 @@ module.exports =
                 loader: 'babel-loader'
             },
             {
+                test: /\.css$/,
+                use: 
+                [
+                    MiniCssExtractPlugin.loader,
+                    'css-loader'
+                ]
+            },
+            {
                 test: /barcode_worker\.js$/,
                 loader: "worker-loader"
             },
@@ -61,14 +69,25 @@ module.exports =
     [
         new VueLoaderPlugin(),
         new HtmlWebpackPlugin( { template: 'index.html' } ),
-        new TerserPlugin
-            ({
-                parallel: true,
-                sourceMap: false,
-                terserOptions: 
-                {
-                    ecma: 6,
-                }
-            })
+        new MiniCssExtractPlugin()
     ]
-};
+}
+
+if(!dev)
+{
+    appConfig.plugins.push(new TerserPlugin
+    ({
+        parallel: true,
+        sourceMap: false,
+        terserOptions: 
+        {
+            ecma: 6,
+        }
+    }))
+
+    appConfig.optimization =  {
+        minimizer: [new OptimizeCSSAssetsPlugin({})],
+      }
+}
+
+module.exports = [appConfig];
