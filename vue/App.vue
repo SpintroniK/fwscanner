@@ -36,18 +36,18 @@
       </div>
       <button class="modal-close is-large" aria-label="close" @click="resetCamError()"></button>
     </div>
-    <div class="modal" :class="{'is-active': displayProduct}">
+    <div class="modal" :class="{'is-active': displayProduct}"  @click="resetState()">
       <div class="modal-background"></div>
       <div class="modal-card">
         <header class="modal-card-head">
           <p class="modal-card-title">{{ barcode }}</p>
-          <button class="delete" aria-label="close"></button>
+          <button class="delete" aria-label="close"  @click="resetState()"></button>
         </header>
         <section class="modal-card-body">
           toto
         </section>
         <footer class="modal-card-foot">
-          <button class="button is-success">OK</button>
+          <button class="button is-success" :class="{'is-loading': barcode.length == 0}" @click="resetState()">OK</button>
         </footer>
       </div>
     </div>
@@ -74,6 +74,12 @@ export default {
   },
   methods: 
   {
+    resetState()
+    {
+      this.barcode = ''
+      this.displayProduct = false
+
+    },
     resetCamError()
     {
       this.camError = false
@@ -154,13 +160,16 @@ export default {
       
       const resultCallback = async d => 
       {
-          const response = await fetch(`https://world.openfoodfacts.org/api/v0/product/${d.barcode}.json`)
-          const data = await response.json()
+          if(!this.displayProduct)
+          {
+            this.displayProduct = true
+            const response = await fetch(`https://world.openfoodfacts.org/api/v0/product/${d.barcode}.json`)
+            const data = await response.json()
 
-          console.log(data.product.product_name)
+            console.log(data.product.product_name)
 
-          this.barcode = data.product.product_name
-          this.displayProduct = true
+            this.barcode = data.product.product_name
+          }
       };
 
       barcordReader.registerCallback(resultCallback);
