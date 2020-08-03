@@ -1,6 +1,53 @@
 <template>
   <div>
-    <div id="home" v-if="showHome">
+    <section v-if="showHome" class="bd-index-fullscreen hero is-fullheight is-light">
+
+      <div class="hero-head">
+        <div class="container">
+          <div class="tabs is-centered">
+            <ul>
+              <li>...</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-body">
+        <div class="container">
+          <header class="bd-index-header">
+            <h3 class="title is-3">
+              <a>
+                FWScanner
+              </a>
+            </h3>
+            <h4 class="subtitle is-4">
+              A fast barcode scanner for the web.
+            </h4>
+          </header>
+          <br />
+          <nav class="buttons is-centered" @click="startScanner">
+            <a class="button is-large is-primary">
+              <span>Scan product</span>
+              <span class="icon">
+                <svg class="svg-inline--fa fa-arrow-right fa-w-14" aria-hidden="true" data-prefix="fas" data-icon="arrow-right" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg=""><path fill="currentColor" d="M190.5 66.9l22.2-22.2c9.4-9.4 24.6-9.4 33.9 0L441 239c9.4 9.4 9.4 24.6 0 33.9L246.6 467.3c-9.4 9.4-24.6 9.4-33.9 0l-22.2-22.2c-9.5-9.5-9.3-25 .4-34.3L311.4 296H24c-13.3 0-24-10.7-24-24v-32c0-13.3 10.7-24 24-24h287.4L190.9 101.2c-9.8-9.3-10-24.8-.4-34.3z"></path></svg><!-- <i class="fas fa-arrow-right"></i> -->
+              </span>
+            </a>
+          </nav>
+        </div>
+      </div>
+
+      <div class="hero-foot">
+        <div class="container">
+          <div class="tabs is-centered">
+            <ul>
+              <li><a>...</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+    </section>
+    <!-- <div id="home" v-if="showHome">
       <section class="hero is-large is-fullheight is-light">
         <div class="hero-body">
           <div class="container">
@@ -19,7 +66,7 @@
           </div>
         </div>
       </section>
-    </div>
+    </div> -->
     <div id="scanner" v-show="showScanner">
       <div id="info"></div>
       <div id="cameras"></div>
@@ -27,30 +74,9 @@
           <canvas id="displayCanvas"></canvas>
       </div>
     </div>  
-    <div class="modal" :class="{'is-active': camError}" @click="resetCamError()">
-      <div class="modal-background"></div>
-      <div class="modal-content">
-        <div class="box">
-          {{ camErrorDesc }}
-        </div>
-      </div>
-      <button class="modal-close is-large" aria-label="close" @click="resetCamError()"></button>
-    </div>
-    <div class="modal" :class="{'is-active': displayProduct}"  @click="resetState()">
-      <div class="modal-background"></div>
-      <div class="modal-card">
-        <header class="modal-card-head">
-          <p class="modal-card-title">{{ barcode }}</p>
-          <button class="delete" aria-label="close"  @click="resetState()"></button>
-        </header>
-        <section class="modal-card-body">
-          toto
-        </section>
-        <footer class="modal-card-foot">
-          <button class="button is-success" :class="{'is-loading': barcode.length == 0}" @click="resetState()">OK</button>
-        </footer>
-      </div>
-    </div>
+
+    <b-loading :is-full-page="true" :active.sync="isLoading" :can-cancel="false"></b-loading>
+
   </div>
 </template>
 
@@ -68,27 +94,44 @@ export default {
                displayProduct: false,
                showHome: true,
                showScanner: false,
-               loadingScanner: false,
+               isLoading: false,
                camError: false
              }
   },
   methods: 
   {
+    showCamError() 
+    {
+      this.isLoading = false
+      this.$buefy.dialog.alert({
+          title: 'Error',
+          message: this.camErrorDesc,
+          type: 'is-danger',
+          hasIcon: true,
+          icon: 'times-circle',
+          iconPack: 'fa',
+          ariaRole: 'alertdialog',
+          ariaModal: true
+      })
+    },
+    showProduct(productData) 
+    {
+      this.$buefy.dialog.alert({
+          title: productData.product_name,
+          message: productData.generic_name_fr,
+          confirmText: 'Cool!',
+          onConfirm: _=> this.resetState()
+      })
+    },
     resetState()
     {
       this.barcode = ''
       this.displayProduct = false
 
     },
-    resetCamError()
-    {
-      this.camError = false
-      this.camErrorDesc = ''
-      this.loadingScanner = false
-    },
     async startScanner()
     {
-      this.loadingScanner = true
+      this.isLoading = true
       let stream = null;
       const cam = new Camera('back');
       try
@@ -141,7 +184,7 @@ export default {
               this.camErrorDesc = 'Camera cannot be opened: unknown error.'
           }
 
-          this.camError = true
+        this.showCamError()
       }
 
       // Hide video
@@ -160,16 +203,17 @@ export default {
       
       const resultCallback = async d => 
       {
-          if(!this.displayProduct)
-          {
-            this.displayProduct = true
-            const response = await fetch(`https://world.openfoodfacts.org/api/v0/product/${d.barcode}.json`)
-            const data = await response.json()
+        
+        if(!this.displayProduct)
+        {
+          this.isLoading = true
+          this.displayProduct = true
+          const response = await fetch(`https://world.openfoodfacts.org/api/v0/product/${d.barcode}.json`)
+          const data = await response.json()
 
-            console.log(data.product.product_name)
-
-            this.barcode = data.product.product_name
-          }
+          this.isLoading = false
+          this.showProduct(data.product)
+        }
       };
 
       barcordReader.registerCallback(resultCallback);
@@ -190,24 +234,21 @@ export default {
 
       requestAnimationFrame(renderCallback);
 
+      this.isLoading = false
       this.showHome = false
       this.showScanner = true
-      this.loadingScanner = false
     }
   }
 }
 
-// https://world.openfoodfacts.org/api/v0/product/3068320080000.json
 </script>
 
 <style>
 
-  @import '~bulma/css/bulma.css';
-
   #displayCanvas
   {
     width: 100vw;
-    max-height: 90vh;
+    max-height: 100vh;
   }
 
 </style>
