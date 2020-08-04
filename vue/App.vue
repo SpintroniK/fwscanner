@@ -2,7 +2,7 @@
   <div>
     <section v-if="showHome" class="bd-index-fullscreen hero is-fullheight is-light">
 
-      <div class="hero-head">
+      <!-- <div class="hero-head">
         <div class="container">
           <div class="tabs is-centered">
             <ul>
@@ -10,14 +10,13 @@
             </ul>
           </div>
         </div>
-      </div>
-
+      </div> -->
       <div class="hero-body">
         <div class="container">
           <header class="bd-index-header">
             <h3 class="title is-3">
               <a>
-                FWScanner
+                FWScanner 
               </a>
             </h3>
             <h4 class="subtitle is-4">
@@ -40,7 +39,7 @@
         <div class="container">
           <div class="tabs is-centered">
             <ul>
-              <li><a>...</a></li>
+              <li><a>Copyright &copy; FreeWebmaster</a></li>
             </ul>
           </div>
         </div>
@@ -84,6 +83,7 @@
 
 import Camera from './../js/cameras.js'
 import BarcodeReader from './../js/barcode.js'
+import { DialogProgrammatic as Dialog } from 'buefy'
 
 export default {
 
@@ -103,7 +103,7 @@ export default {
     showCamError() 
     {
       this.isLoading = false
-      this.$buefy.dialog.alert({
+      Dialog.alert({
           title: 'Error',
           message: this.camErrorDesc,
           type: 'is-danger',
@@ -116,10 +116,12 @@ export default {
     },
     showProduct(productData) 
     {
-      this.$buefy.dialog.alert({
+      Dialog.confirm({
           title: productData.product_name,
           message: productData.generic_name_fr,
-          confirmText: 'Cool!',
+          cancelText: 'Home screen',
+          confirmText: 'Scan new product',
+          onCancel: _ => document.location = './',
           onConfirm: _=> this.resetState()
       })
     },
@@ -171,7 +173,7 @@ export default {
           else if(err.name == "NotAllowedError" || err.name == "PermissionDeniedError")
           {
               //permission denied in browser 
-              this.camErrorDesc = 'Camera cannot be opened: permission denied.'
+              this.camErrorDesc = 'The Camera cannot be opened: permission denied.'
           }
           else if(err.name == "TypeError")
           {
