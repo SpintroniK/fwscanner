@@ -2,7 +2,7 @@ import Vue from 'vue'
 import App from '../vue/App.vue'
 
 import { ConfigProgrammatic } from 'buefy'
-ConfigProgrammatic.setOptions({ defaultIconPack: 'far', defaultIconComponent: 'vue-fontawesome' })
+ConfigProgrammatic.setOptions({ defaultIconPack: 'fas', defaultIconComponent: 'vue-fontawesome' })
 
 Vue.config.productionTip = false
 
