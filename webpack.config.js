@@ -38,12 +38,21 @@ const appConfig = {
                 loader: 'babel-loader'
             },
             {
-                test: /\.css$/,
+                test: /\.s(a|c)ss$/,
+                exclude: /\.module.(s(a|c)ss)$/,
                 use: 
                 [
                     MiniCssExtractPlugin.loader,
                     'css-loader',
                     'sass-loader'
+                ]
+            },
+            {
+                test: /\.css$/,
+                use: 
+                [
+                    MiniCssExtractPlugin.loader,
+                    'css-loader'
                 ]
             },
             {

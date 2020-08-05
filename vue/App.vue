@@ -27,9 +27,10 @@
           <nav class="buttons is-centered" @click="startScanner">
             <a class="button is-large is-primary">
               <span>Scan product</span>
-              <span class="icon">
-                <svg class="svg-inline--fa fa-arrow-right fa-w-14" aria-hidden="true" data-prefix="fas" data-icon="arrow-right" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg=""><path fill="currentColor" d="M190.5 66.9l22.2-22.2c9.4-9.4 24.6-9.4 33.9 0L441 239c9.4 9.4 9.4 24.6 0 33.9L246.6 467.3c-9.4 9.4-24.6 9.4-33.9 0l-22.2-22.2c-9.5-9.5-9.3-25 .4-34.3L311.4 296H24c-13.3 0-24-10.7-24-24v-32c0-13.3 10.7-24 24-24h287.4L190.9 101.2c-9.8-9.3-10-24.8-.4-34.3z"></path></svg><!-- <i class="fas fa-arrow-right"></i> -->
-              </span>
+              <b-icon
+                pack="fas"
+                icon="arrow-right">
+              </b-icon>
             </a>
           </nav>
         </div>
@@ -39,33 +40,14 @@
         <div class="container">
           <div class="tabs is-centered">
             <ul>
-              <li><a>Copyright &copy; FreeWebmaster</a></li>
+              <li><a><b-icon pack="fas" icon="copyright" size="is-small" type="is-primary"></b-icon>FreeWebmaster</a></li>
             </ul>
           </div>
         </div>
       </div>
 
     </section>
-    <!-- <div id="home" v-if="showHome">
-      <section class="hero is-large is-fullheight is-light">
-        <div class="hero-body">
-          <div class="container">
-            <h1 class="title">
-              FWScanner
-            </h1>
-            <h2 class="subtitle">
-              A fast barcode scanner for the web.
-              <br />
-              <br />
-              <div class="has-text-centered">
-                <button @click="startScanner" id="startButton" class="button is-primary is-medium" 
-                        :class="{'is-loading': loadingScanner}">Scan product</button>
-              </div>
-            </h2>
-          </div>
-        </div>
-      </section>
-    </div> -->
+
     <div id="scanner" v-show="showScanner">
       <div id="info"></div>
       <div id="cameras"></div>
@@ -87,17 +69,18 @@ import BarcodeReader from './../js/barcode.js'
 import { library } from '@fortawesome/fontawesome-svg-core'
 
 // internal icons
-import { faTimesCircle } from "@fortawesome/free-solid-svg-icons"
+import { faTimesCircle, faArrowRight, faCopyright } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome"
 
-library.add(faTimesCircle)
+library.add(faTimesCircle, faArrowRight, faCopyright)
 Vue.component('vue-fontawesome', FontAwesomeIcon)
 
 import Vue from 'vue'
-import { Loading, DialogProgrammatic as Dialog, Dialog as D} from 'buefy'
+import { Loading, DialogProgrammatic as Dialog, Dialog as D, Icon} from 'buefy'
 
 Vue.use(Loading)
 Vue.use(Dialog)
+Vue.use(Icon)
 Vue.use(D)
 
 
@@ -262,11 +245,44 @@ export default {
 </script>
 
 <style>
-
   #displayCanvas
   {
     width: 100vw;
-    max-height: 100vh;
   }
+</style>
+
+<style lang="sass">
+
+  @import "~bulma/sass/utilities/_all";
+
+  $primary: #d23232;
+  $primary-invert: findColorInvert($primary);
+  $twitter: #4099FF;
+  $twitter-invert: findColorInvert($twitter);
+
+  $black: #141418;
+  $white: findColorInvert($black);
+
+  $colors: (
+      "white": ($white, $black),
+      "black": ($black, $white),
+      "light": ($black, $white),
+      "dark": ($dark, $dark-invert),
+      "primary": ($primary, $primary-invert),
+      "info": ($info, $info-invert),
+      "success": ($success, $success-invert),
+      "warning": ($warning, $warning-invert),
+      "danger": ($danger, $danger-invert),
+      "twitter": ($twitter, $twitter-invert)
+  );
+
+  $link: $primary;
+  $link-invert: $primary-invert;
+  $link-focus-border: $primary;
+
+  @import "~bulma";
+  @import "~buefy/src/scss/components/_dialog.scss";
+  @import "~buefy/src/scss/components/_loading.scss";
+  @import "~buefy/src/scss/utils/_all.scss";
 
 </style>
