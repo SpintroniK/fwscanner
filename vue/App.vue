@@ -77,13 +77,29 @@
     <b-loading :is-full-page="true" :active.sync="isLoading" :can-cancel="false"></b-loading>
 
   </div>
-</template>
+</template>import Vue from 'vue'
 
 <script>
 
 import Camera from './../js/cameras.js'
 import BarcodeReader from './../js/barcode.js'
-import { DialogProgrammatic as Dialog } from 'buefy'
+
+import { library } from '@fortawesome/fontawesome-svg-core'
+
+// internal icons
+import { faTimesCircle } from "@fortawesome/free-solid-svg-icons"
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome"
+
+library.add(faTimesCircle)
+Vue.component('vue-fontawesome', FontAwesomeIcon)
+
+import Vue from 'vue'
+import { Loading, DialogProgrammatic as Dialog, Dialog as D} from 'buefy'
+
+Vue.use(Loading)
+Vue.use(Dialog)
+Vue.use(D)
+
 
 export default {
 
