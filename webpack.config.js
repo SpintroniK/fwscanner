@@ -42,7 +42,8 @@ const appConfig = {
                 use: 
                 [
                     MiniCssExtractPlugin.loader,
-                    'css-loader'
+                    'css-loader',
+                    'sass-loader'
                 ]
             },
             {
