@@ -40,7 +40,8 @@
         <div class="container">
           <div class="tabs is-centered">
             <ul>
-              <li><a><b-icon pack="fas" icon="copyright" size="is-small" type="is-primary"></b-icon>FreeWebmaster</a></li>
+              <li><a><b-icon pack="fas" icon="copyright" size="is-small" type="is-primary"></b-icon>
+              <strong class="has-text-primary">Free</strong><strong>Webmaster</strong></a></li>
             </ul>
           </div>
         </div>
@@ -59,7 +60,7 @@
     <b-loading :is-full-page="true" :active.sync="isLoading" :can-cancel="false"></b-loading>
 
   </div>
-</template>import Vue from 'vue'
+</template>
 
 <script>
 
@@ -245,9 +246,19 @@ export default {
 </script>
 
 <style>
+
+  #container
+  {
+    position: fixed;
+    top: 0;
+    left: 0;
+    min-width: 100vw;
+    min-height: 100vh;
+  }
+
   #displayCanvas
   {
-    width: 100vw;
+    object-fit: contain;
   }
 </style>
 
