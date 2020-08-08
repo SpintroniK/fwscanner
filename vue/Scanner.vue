@@ -1,55 +1,6 @@
 <template>
   <div>
-    <section v-if="showHome" class="bd-index-fullscreen hero is-fullheight is-light">
-
-      <!-- <div class="hero-head">
-        <div class="container">
-          <div class="tabs is-centered">
-            <ul>
-              <li>...</li>
-            </ul>
-          </div>
-        </div>
-      </div> -->
-      <div class="hero-body">
-        <div class="container">
-          <header class="bd-index-header">
-            <h3 class="title is-3">
-              <a>
-                FWScanner 
-              </a>
-            </h3>
-            <h4 class="subtitle is-4">
-              A fast barcode scanner for the web.
-            </h4>
-          </header>
-          <br />
-          <nav class="buttons is-centered" @click="startScanner">
-            <a class="button is-large is-primary">
-              <span>Scan product</span>
-              <b-icon
-                pack="fas"
-                icon="arrow-right">
-              </b-icon>
-            </a>
-          </nav>
-        </div>
-      </div>
-
-      <div class="hero-foot">
-        <div class="container">
-          <div class="tabs is-centered">
-            <ul>
-              <li><a><b-icon pack="fas" icon="copyright" size="is-small" type="is-primary"></b-icon>
-              <strong class="has-text-primary">Free</strong><strong>Webmaster</strong></a></li>
-            </ul>
-          </div>
-        </div>
-      </div>
-
-    </section>
-
-    <div id="scanner" v-show="showScanner">
+    <div id="scanner">
       <div id="info"></div>
       <div id="cameras"></div>
       <div id="container">
@@ -67,24 +18,6 @@
 import Camera from './../js/cameras.js'
 import BarcodeReader from './../js/barcode.js'
 
-import { library } from '@fortawesome/fontawesome-svg-core'
-
-// internal icons
-import { faTimesCircle, faArrowRight, faCopyright } from "@fortawesome/free-solid-svg-icons"
-import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome"
-
-library.add(faTimesCircle, faArrowRight, faCopyright)
-Vue.component('vue-fontawesome', FontAwesomeIcon)
-
-import Vue from 'vue'
-import { Loading, DialogProgrammatic as Dialog, Dialog as D, Icon} from 'buefy'
-
-Vue.use(Loading)
-Vue.use(Dialog)
-Vue.use(Icon)
-Vue.use(D)
-
-
 export default {
 
   data() 
@@ -92,8 +25,6 @@ export default {
       return { barcode: '',
                camErrorDesc: '',
                displayProduct: false,
-               showHome: true,
-               showScanner: false,
                isLoading: false,
                camError: false
              }
@@ -103,7 +34,7 @@ export default {
     showCamError() 
     {
       this.isLoading = false
-      Dialog.alert({
+      this.$buefy.dialog.alert({
           title: 'Error',
           message: this.camErrorDesc,
           type: 'is-danger',
@@ -111,19 +42,14 @@ export default {
           icon: 'times-circle',
           iconPack: 'fa',
           ariaRole: 'alertdialog',
-          ariaModal: true
+          ariaModal: true,
+          onConfirm: _ => {this.$router.push({ name: 'home'})}
       })
     },
     showProduct(productData) 
     {
-      Dialog.confirm({
-          title: productData.product_name,
-          message: productData.generic_name_fr,
-          cancelText: 'Home screen',
-          confirmText: 'Scan new product',
-          onCancel: _ => document.location = './',
-          onConfirm: _=> this.resetState()
-      })
+      const nutriments = productData.nutriments
+      console.log(nutriments)
     },
     resetState()
     {
@@ -203,19 +129,10 @@ export default {
 
       const barcordReader = new BarcodeReader({drawRect: true, drawingCanvas: displayCanvas});
       
-      const resultCallback = async d => 
+      const resultCallback = d => 
       {
-        
-        if(!this.displayProduct)
-        {
-          this.isLoading = true
-          this.displayProduct = true
-          const response = await fetch(`https://world.openfoodfacts.org/api/v0/product/${d.barcode}.json`)
-          const data = await response.json()
-
-          this.isLoading = false
-          this.showProduct(data.product)
-        }
+        cam.Stop()
+        this.$router.push({ name: 'product', query: {id: d.barcode}})
       };
 
       barcordReader.registerCallback(resultCallback);
@@ -240,6 +157,9 @@ export default {
       this.showHome = false
       this.showScanner = true
     }
+  },
+  mounted () {
+    this.startScanner()
   }
 }
 
@@ -249,6 +169,7 @@ export default {
 
   #container
   {
+    background-color: #141418;
     position: fixed;
     top: 0;
     left: 0;
@@ -260,40 +181,4 @@ export default {
   {
     object-fit: contain;
   }
-</style>
-
-<style lang="sass">
-
-  @import "~bulma/sass/utilities/_all";
-
-  $primary: #d23232;
-  $primary-invert: findColorInvert($primary);
-  $twitter: #4099FF;
-  $twitter-invert: findColorInvert($twitter);
-
-  $black: #141418;
-  $white: findColorInvert($black);
-
-  $colors: (
-      "white": ($white, $black),
-      "black": ($black, $white),
-      "light": ($black, $white),
-      "dark": ($dark, $dark-invert),
-      "primary": ($primary, $primary-invert),
-      "info": ($info, $info-invert),
-      "success": ($success, $success-invert),
-      "warning": ($warning, $warning-invert),
-      "danger": ($danger, $danger-invert),
-      "twitter": ($twitter, $twitter-invert)
-  );
-
-  $link: $primary;
-  $link-invert: $primary-invert;
-  $link-focus-border: $primary;
-
-  @import "~bulma";
-  @import "~buefy/src/scss/components/_dialog.scss";
-  @import "~buefy/src/scss/components/_loading.scss";
-  @import "~buefy/src/scss/utils/_all.scss";
-
 </style>
