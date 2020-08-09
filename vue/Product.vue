@@ -1,5 +1,5 @@
 <template>
-  <div id="product">
+  <div>
     <div class="card">
       <div class="card-image">
         <figure class="image">
@@ -110,17 +110,32 @@ export default {
   },
   mounted()
   {
-    this.barcode = this.$route.query.id
-    this.getProduct(this.barcode)
+    this.barcode = `${this.$route.query.id}`
+    const checkSum = this.barcode.split('').reduce((p, v, i) => i % 2 == 0 ? p + 1 * v : p + 3 * v, 0);
+    const isValid = checkSum % 10 == 0
+    if(isValid)
+    {
+      this.getProduct(this.barcode)
+    }
+    else
+    {
+        this.isLoading = false
+        this.$buefy.dialog.alert({
+          title: 'Error',
+          message: 'Invalid barcode, please scan the product again.',
+          type: 'is-danger',
+          hasIcon: true,
+          icon: 'times-circle',
+          iconPack: 'fa',
+          ariaRole: 'alertdialog',
+          ariaModal: true,
+          onConfirm: _ => { this.$router.push({ name: 'scanner'}) }
+        })
+    }
   }
 }
 </script>
 
 <style>
-
-  #product
-  {
-    background-color: #fff;
-  }
 
 </style>
