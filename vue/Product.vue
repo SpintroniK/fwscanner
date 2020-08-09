@@ -3,7 +3,7 @@
     <div class="card">
       <div class="card-image">
         <figure class="image">
-          <img :src="productInfo.image_front_url">
+          <img :src="productInfo.image_front_url" id="product-image">
         </figure>
       </div>
       <div class="card-content">
@@ -63,12 +63,12 @@ export default {
       productInfo: false,
       nutrimentsValues: {},
       validNutrimentNames: ['sugars', 'fat', 'saturated-fat', 'proteins', 'fiber', 'salt'],
-      numtrimentsThresMax: {'sugars': {t: 10, m: 40},
-                            'fat': {t: 10, m: 20},
-                            'fiber': {t: 10, m: 40},
-                            'proteins': {t: 10, m: 40},
-                            'salt': {t: 10, m: 40},
-                            'saturated-fat': {t: 10, m: 40},}
+      numtrimentsThresMax: {'sugars': {t: 18, m: 45},
+                            'fat': {t: 1000, m: 50},
+                            'fiber': {t: 1000, m: 7},
+                            'proteins': {t: 1000, m: 16},
+                            'salt': {t: 0.92, m: 2.3},
+                            'saturated-fat': {t: 4, m: 10},}
     }
   },
   methods:
@@ -137,5 +137,11 @@ export default {
 </script>
 
 <style>
+
+  #product-image
+  {
+    max-height: 50vh;
+    object-fit: contain;
+  }
 
 </style>
