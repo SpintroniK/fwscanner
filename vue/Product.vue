@@ -1,126 +1,111 @@
 <template>
   <div id="product">
-    <article class="media" v-if="productInfo">
-      <figure class="media-left">
-        <p class="image is-64x64">
-          <img :src="productInfo.image_front_url" />
-        </p>
-      </figure>
-      <div class="media-content">
-        {{barcode}}
-        <div class="content">
-          <p>
-            <strong>${productData.product_name}</strong>
-            <br />
-            <small>${productData.generic_name}</small>
-            <br />
-            toto
-            <b-progress :value="80" type="is-success" show-value></b-progress>
-            toto
-          </p>
-        </div>
-        <nav class="level is-mobile">
-          <div class="level-left">
-            <a class="level-item">
-              <span class="icon is-small"><i class="fas fa-reply"></i></span>
-            </a>
-            <a class="level-item">
-              <span class="icon is-small"><i class="fas fa-retweet"></i></span>
-            </a>
-            <a class="level-item">
-              <span class="icon is-small"><i class="fas fa-heart"></i></span>
-            </a>
+    <div class="card">
+      <div class="card-image">
+        <figure class="image">
+          <img :src="productInfo.image_front_url">
+        </figure>
+      </div>
+      <div class="card-content">
+        <div class="media">
+          <div class="media-left">
+            <figure class="image is-48x48">
+              <img :src="productInfo.image_thumb_url">
+            </figure>
           </div>
-        </nav>
+          <div class="media-content">
+            <p class="title is-4">{{productInfo.product_name}}</p>
+            <p class="subtitle is-6">{{productInfo.generic_name}}</p>
+          </div>
+        </div>
+
+        <div class="columns is-mobile" v-for="nutriment in validNutrimentNames " :key="nutriment">
+          <div class="column has-text-right is-one-third is-capitalized">{{nutriment}}</div>
+          <div class="column">
+            <b-progress :value="getValue(nutriment, nutrimentsValues[nutriment])"
+                        :type="getNutrimentType(nutriment, nutrimentsValues[nutriment])" show-value size="is-large">
+              {{nutrimentsValues[nutriment]}}
+            </b-progress>
+          </div>
+        </div>
+        <div class="content">
+        </div>
       </div>
-      <div class="media-right">
-      </div>
-    </article>
+    </div>
+    <router-link :to="{name: 'scanner'}" tag="nav" class="buttons is-centered">
+      <a class="button is-primary mt-3 mb-3">
+        <span>Scan another product</span>
+        <b-icon pack="fas" icon="arrow-right"></b-icon>
+      </a>
+    </router-link>
+    <b-loading :is-full-page="true" :active.sync="isLoading" :can-cancel="false"></b-loading>
   </div>
 </template>
 
 <script>
-//       {
-//   "energy-kj_unit": "kJ",
-//   "carbohydrates_unit": "g",
-//   "fiber": 3.5,
-//   "saturated-fat_100g": 5.9,
-//   "energy_100g": 2030,
-//   "fiber_value": 3.5,
-//   "nova-group": 4,
-//   "nutrition-score-fr_serving": 15,
-//   "carbohydrates_100g": 64,
-//   "salt_unit": "g",
-//   "saturated-fat": 5.9,
-//   "saturated-fat_serving": 0.82,
-//   "sodium_value": 0.08,
-//   "fiber_100g": 3.5,
-//   "energy": 2030,
-//   "salt_serving": 0.0278,
-//   "proteins_serving": 0.82,
-//   "fruits-vegetables-nuts_serving": 4,
-//   "sodium": 0.08,
-//   "fruits-vegetables-nuts_unit": "g",
-//   "fat_value": 22,
-//   "sugars_value": 32,
-//   "fat_serving": 3.06,
-//   "energy_value": 2030,
-//   "saturated-fat_unit": "g",
-//   "carbohydrates": 64,
-//   "proteins_unit": "g",
-//   "salt": 0.2,
-//   "energy_serving": 282,
-//   "nova-group_serving": 4,
-//   "energy-kj": 2030,
-//   "fat_unit": "g",
-//   "fruits-vegetables-nuts_value": 4,
-//   "sodium_unit": "g",
-//   "saturated-fat_value": 5.9,
-//   "carbohydrates_value": 64,
-//   "nutrition-score-fr": 15,
-//   "sodium_100g": 0.08,
-//   "nutrition-score-fr_100g": 15,
-//   "fruits-vegetables-nuts_100g": 4,
-//   "proteins_value": 5.9,
-//   "sugars_unit": "g",
-//   "energy-kj_serving": 282,
-//   "salt_100g": 0.2,
-//   "proteins_100g": 5.9,
-//   "fiber_serving": 0.487,
-//   "sugars": 32,
-//   "sugars_serving": 4.45,
-//   "sodium_serving": 0.0111,
-//   "energy-kj_100g": 2030,
-//   "fiber_unit": "g",
-//   "nova-group_100g": 4,
-//   "carbohydrates_serving": 8.9,
-//   "fruits-vegetables-nuts": 4,
-//   "sugars_100g": 32,
-//   "energy_unit": "kJ",
-//   "fat_100g": 22,
-//   "fruits-vegetables-nuts-estimate-from-ingredients_100g": 4,
-//   "salt_value": 0.2,
-//   "fat": 22,
-//   "energy-kj_value": 2030,
-//   "proteins": 5.9
-// }
+
+Object.filter = (obj, predicate) => 
+    Object.keys(obj)
+          .filter( key => predicate(obj[key]) )
+          .reduce( (res, key) => (res[key] = obj[key], res), {} )
+
+Object.filterKeys = (obj, predicate) => 
+    Object.keys(obj)
+          .filter( key => predicate(key) )
+          .reduce( (res, key) => (res[key] = obj[key], res), {} )
 
 export default {
   data()
   {
     return {
       barcode: '',
-      productInfo: false
+      isLoading: true,
+      productInfo: false,
+      nutrimentsValues: {},
+      validNutrimentNames: ['sugars', 'fat', 'saturated-fat', 'proteins', 'fiber', 'salt'],
+      numtrimentsThresMax: {'sugars': {t: 10, m: 40},
+                            'fat': {t: 10, m: 20},
+                            'fiber': {t: 10, m: 40},
+                            'proteins': {t: 10, m: 40},
+                            'salt': {t: 10, m: 40},
+                            'saturated-fat': {t: 10, m: 40},}
     }
   },
   methods:
   {
     async getProduct(id)
     {
+      this.isLoading = true
       const response = await fetch(`https://world.openfoodfacts.org/api/v0/product/${id}.json`)
       const data = await response.json()
-      console.log(data.product)
       this.productInfo = data.product
+      this.isLoading = false
+      const nutrimentsNames = this.validNutriments.map(x => x.replace('_100g', ''))
+      this.nutrimentsValues = Object.assign({}, ...nutrimentsNames.map(x => ({[x]: this.productInfo.nutriments[x]})))
+    },
+    getNutrimentType(name, val)
+    {
+      if(val < this.numtrimentsThresMax[name].t)
+      {
+        return {'is-success': true}
+      }
+      else
+      {
+        return {'is-warning': true}
+      }
+    },
+    getValue(name, val)
+    {
+      return 100*val/this.numtrimentsThresMax[name].m
+    }
+  },
+  computed:
+  {
+    validNutriments()
+    {
+      const validKeys = Object.keys(Object.filterKeys(this.productInfo.nutriments, x => x.endsWith('_100g')))
+      const validNutriments = validKeys.filter(x => this.validNutrimentNames.indexOf(x.replace('_100g', '')) > -1)
+      return validNutriments
     }
   },
   mounted()
@@ -135,8 +120,6 @@ export default {
 
   #product
   {
-    width: 100vw;
-    height: 100vh;
     background-color: #fff;
   }
 
