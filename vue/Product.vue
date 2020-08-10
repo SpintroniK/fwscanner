@@ -41,8 +41,9 @@
     <b-loading :is-full-page="true" :active.sync="isLoading" :can-cancel="false"></b-loading>
   </div>
 </template>
-
 <script>
+
+// TODO: add red thresholds
 
 Object.filter = (obj, predicate) => 
     Object.keys(obj)
