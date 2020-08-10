@@ -1,11 +1,18 @@
 const path = require("path")
+const glob = require('glob')
 const TerserPlugin = require('terser-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
+const PurgecssPlugin = require('purgecss-webpack-plugin')
 
 const dev = process.env.NODE_ENV === 'dev'
+
+ 
+const PATHS = {
+    src: path.join(__dirname, 'dist')
+  }
 
 const appConfig = {
     mode: dev? "development" : "production",
@@ -85,8 +92,7 @@ const appConfig = {
 
 if(!dev)
 {
-    appConfig.plugins.push(new TerserPlugin
-    ({
+    appConfig.plugins.push(new TerserPlugin({
         parallel: true,
         sourceMap: false,
         terserOptions: 
@@ -95,9 +101,9 @@ if(!dev)
         }
     }))
 
-    appConfig.optimization =  {
-        minimizer: [new OptimizeCSSAssetsPlugin({})],
-      }
+    appConfig.plugins.push(new PurgecssPlugin({ paths: glob.sync(`${PATHS.src}/**/*`,  { nodir: true }) }))
+
+    appConfig.optimization =  { minimizer: [new OptimizeCSSAssetsPlugin({})] }
 }
 
 module.exports = [appConfig];
