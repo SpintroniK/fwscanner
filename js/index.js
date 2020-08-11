@@ -54,6 +54,7 @@ const checkVersion = function()
 
 const baseUrl = new URL('./', document.baseURI).href;
 
+
 // TODO: Extract manifest js
 fetch(`manifest.json`)
 .then(resp => resp.json(),

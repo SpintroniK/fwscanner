@@ -61,6 +61,7 @@ export default {
   {
     if(!window.matchMedia('(display-mode: standalone)').matches) 
     {
+      // TODO: Add "Install App" link
       this.appInstall = 'INSTALL APP'
     }
   }

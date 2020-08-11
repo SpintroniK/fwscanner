@@ -167,6 +167,12 @@ export default {
 
 <style>
 
+  video
+  {
+      position: fixed;
+      top: 0;
+      left: 0;
+  }
   #container
   {
     background-color: #141418;
@@ -181,4 +187,5 @@ export default {
   {
     object-fit: contain;
   }
+
 </style>
