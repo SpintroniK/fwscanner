@@ -7,55 +7,11 @@
         <meta name="viewport" content="width=device-width,initial-scale=1">
         <link rel="apple-touch-icon" sizes="128x128" href="images/icons/icon-128x128.png">
         <script>
-            // TODO: Extract manifest js
             // TODO: Add "Install App" link
-            const checkVersion = function() 
-            {
-                var agent = window.navigator.userAgent,
-                start = agent.indexOf('OS ');
-                if((agent.indexOf('iPhone') > -1 || agent.indexOf('iPad') > -1 ) && start > -1 )
-                {
-                    return parseFloat(agent.substr(start + 3, 4).replace( '_', '.' ));
-                }
-                return Number.MAX_SAFE_INTEGER;
-            }
-
-            const baseUrl = new URL('./', document.baseURI).href;
- 
-            fetch(`manifest.json`)
-            .then(
-                resp => resp.json(),
-                error => console.error(error)
-            )
-            .then(
-                j => 
-                {
-                    const h = document.getElementsByTagName('head')[0];
-                    const l = document.createElement('link');
-                    l.rel = 'manifest';
-
-                    j.start_url = baseUrl + j.start_url;
-                    j.icons.map(i => i.src = baseUrl + i.src);
-
-                    if(checkVersion() < 13.4)
-                        j.display = 'browser';
-
-                    const stringManifest = JSON.stringify(j);
-                    const blob = new Blob([stringManifest], {type: 'application/json'});
-                    const manifestURL = URL.createObjectURL(blob);
-                    l.href = manifestURL;
-                    h.appendChild(l);
-                },
-                error => console.error(error)
-            )
-        </script>
-        <script>
             if(window.matchMedia('(display-mode: standalone)').matches) 
             {
                 console.log("Thank you for installing our app!");
             }
-
-            // For debug purposes only
 
         </script>
         <style>

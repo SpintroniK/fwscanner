@@ -1,15 +1,15 @@
 <template>
   <section class="bd-index-fullscreen hero is-fullheight is-light">
 
-    <!-- <div class="hero-head">
+    <div class="hero-head">
       <div class="container">
         <div class="tabs is-centered">
           <ul>
-            <li>...</li>
+            <li> <a><strong>{{ appInstall }}</strong></a></li>
           </ul>
         </div>
       </div>
-    </div> -->
+    </div>
     <div class="hero-body">
       <div class="container">
         <header class="bd-index-header">
@@ -49,7 +49,20 @@
 </template>
 
 <script>
+
 export default {
-  
+  data()
+  {
+    return {
+      appInstall: ''
+    }
+  },
+  mounted()
+  {
+    if(!window.matchMedia('(display-mode: standalone)').matches) 
+    {
+      this.appInstall = 'INSTALL APP'
+    }
+  }
 }
 </script>
