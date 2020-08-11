@@ -1,8 +1,8 @@
 {
-  "name": "Barcode",
-  "short_name": "Barcode",
-  "theme_color": "#2196f3",
-  "background_color": "#2196f3",
+  "name": "FWScanner",
+  "short_name": "FWScanner",
+  "theme_color": "#141418",
+  "background_color": "#141418",
   "display": "standalone",
   "Scope": "/",
   "start_url": "/",
