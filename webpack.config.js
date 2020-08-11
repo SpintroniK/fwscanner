@@ -6,6 +6,7 @@ const VueLoaderPlugin = require('vue-loader/lib/plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 const PurgecssPlugin = require('purgecss-webpack-plugin')
+const WorkboxPlugin = require('workbox-webpack-plugin')
 
 const dev = process.env.NODE_ENV === 'dev'
 
@@ -86,7 +87,8 @@ const appConfig = {
     [
         new VueLoaderPlugin(),
         new HtmlWebpackPlugin( { template: 'index.html' } ),
-        new MiniCssExtractPlugin()
+        new MiniCssExtractPlugin(),
+        new WorkboxPlugin.GenerateSW({clientsClaim: true, skipWaiting: true})
     ]
 }
 
