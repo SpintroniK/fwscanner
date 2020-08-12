@@ -23,6 +23,7 @@
           <div class="column has-text-right is-one-third is-capitalized">{{nutriment}}</div>
           <div class="column">
             <b-progress :value="getValue(nutriment, nutrimentsValues[nutriment])"
+                        :precision="2"
                         :type="getNutrimentType(nutriment, nutrimentsValues[nutriment])" show-value size="is-large">
               {{nutrimentsValues[nutriment]}}
             </b-progress>
