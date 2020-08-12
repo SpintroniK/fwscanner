@@ -7,6 +7,7 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 const PurgecssPlugin = require('purgecss-webpack-plugin')
 const CopyPlugin = require('copy-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const WorkboxPlugin = require('workbox-webpack-plugin')
 
 const dev = process.env.NODE_ENV === 'dev'
@@ -86,6 +87,7 @@ const appConfig = {
     },
     plugins: 
     [
+        new CleanWebpackPlugin(),
         new VueLoaderPlugin(),
         new HtmlWebpackPlugin( { template: 'index.html' } ),
         new MiniCssExtractPlugin(),
@@ -107,7 +109,8 @@ if(!dev)
     appConfig.plugins.push(new PurgecssPlugin({ paths: glob.sync(`${PATHS.src}/**/*`,  { nodir: true }) }))
 
     appConfig.plugins.push(new CopyPlugin({
-        patterns: [{ from: path.join(__dirname, 'manifest.json'), to: path.join(__dirname, 'dist', 'manifest.json') }],
+        patterns: [{ from: path.join(__dirname, 'manifest.json'), to: path.join(__dirname, 'dist', 'manifest.json') },
+                   { from: path.join(__dirname, 'images'), to: path.join(__dirname, 'dist', 'images')}],
         options: {
           concurrency: 100,
         }
