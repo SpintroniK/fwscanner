@@ -6,6 +6,7 @@ const VueLoaderPlugin = require('vue-loader/lib/plugin')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin')
 const PurgecssPlugin = require('purgecss-webpack-plugin')
+const CopyPlugin = require('copy-webpack-plugin');
 const WorkboxPlugin = require('workbox-webpack-plugin')
 
 const dev = process.env.NODE_ENV === 'dev'
@@ -104,6 +105,13 @@ if(!dev)
     }))
 
     appConfig.plugins.push(new PurgecssPlugin({ paths: glob.sync(`${PATHS.src}/**/*`,  { nodir: true }) }))
+
+    appConfig.plugins.push(new CopyPlugin({
+        patterns: [{ from: path.join(__dirname, 'manifest.json'), to: path.join(__dirname, 'dist', 'manifest.json') }],
+        options: {
+          concurrency: 100,
+        }
+      }))
 
     appConfig.optimization =  { minimizer: [new OptimizeCSSAssetsPlugin({})] }
 }
