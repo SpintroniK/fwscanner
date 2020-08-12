@@ -38,7 +38,6 @@
         <b-icon pack="fas" icon="arrow-right"></b-icon>
       </a>
     </router-link>
-    <b-loading :is-full-page="true" :active.sync="isLoading" :can-cancel="false"></b-loading>
   </div>
 </template>
 <script>
@@ -79,6 +78,18 @@ export default {
       this.isLoading = true
       const response = await fetch(`https://world.openfoodfacts.org/api/v0/product/${id}.json`)
       const data = await response.json()
+
+      if(data.status != 1)
+      {
+        setTimeout(_ => isLoading = false, 10)
+        this.$buefy.dialog.alert({message: `API returned <strong>${data.status_verbose}</strong>.`,
+                                  confirmText: 'Scan again',
+                                  type: 'is-warning',
+                                  hasIcon: true,
+                                  onConfirm: _ => {this.$router.push({ name: 'scanner'})}
+                                  })
+      }
+
       this.productInfo = data.product
       this.isLoading = false
       const nutrimentsNames = this.validNutriments.map(x => x.replace('_100g', ''))

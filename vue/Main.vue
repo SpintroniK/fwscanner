@@ -12,10 +12,10 @@
 import { library } from '@fortawesome/fontawesome-svg-core'
 
 // internal icons
-import { faTimesCircle, faArrowRight, faCopyright } from "@fortawesome/free-solid-svg-icons"
+import { faTimesCircle, faArrowRight, faCopyright, faExclamationTriangle } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome"
 
-library.add(faTimesCircle, faArrowRight, faCopyright)
+library.add(faTimesCircle, faArrowRight, faCopyright, faExclamationTriangle)
 
 import Vue from 'vue'
 Vue.component('vue-fontawesome', FontAwesomeIcon)
