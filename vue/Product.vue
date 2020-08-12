@@ -38,6 +38,7 @@
         <b-icon pack="fas" icon="arrow-right"></b-icon>
       </a>
     </router-link>
+    <b-loading :is-full-page="true" :active.sync="isLoading" :can-cancel="false"></b-loading>
   </div>
 </template>
 <script>
@@ -81,13 +82,14 @@ export default {
 
       if(data.status != 1)
       {
-        setTimeout(_ => isLoading = false, 10)
+        this.isLoading = false
         this.$buefy.dialog.alert({message: `API returned <strong>${data.status_verbose}</strong>.`,
                                   confirmText: 'Scan again',
                                   type: 'is-warning',
                                   hasIcon: true,
                                   onConfirm: _ => {this.$router.push({ name: 'scanner'})}
                                   })
+        return
       }
 
       this.productInfo = data.product
