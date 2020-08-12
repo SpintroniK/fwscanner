@@ -23,7 +23,6 @@
           <div class="column has-text-right is-one-third is-capitalized">{{nutriment}}</div>
           <div class="column">
             <b-progress :value="getValue(nutriment, nutrimentsValues[nutriment])"
-                        :precision="2"
                         :type="getNutrimentType(nutriment, nutrimentsValues[nutriment])" show-value size="is-large">
               {{nutrimentsValues[nutriment]}}
             </b-progress>
@@ -83,7 +82,7 @@ export default {
       this.productInfo = data.product
       this.isLoading = false
       const nutrimentsNames = this.validNutriments.map(x => x.replace('_100g', ''))
-      this.nutrimentsValues = Object.assign({}, ...nutrimentsNames.map(x => ({[x]: this.productInfo.nutriments[x]})))
+      this.nutrimentsValues = Object.assign({}, ...nutrimentsNames.map(x => ({[x]: Number((this.productInfo.nutriments[x]).toFixed(2))})))
     },
     getNutrimentType(name, val)
     {
