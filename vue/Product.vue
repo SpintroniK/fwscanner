@@ -83,7 +83,8 @@ export default {
       if(data.status != 1)
       {
         this.isLoading = false
-        this.$buefy.dialog.alert({message: `API returned <strong>${data.status_verbose}</strong>.`,
+        this.$buefy.dialog.alert({message: `API returned <strong>${data.status_verbose}</strong>.
+                                            <br />Make sure you scan food products.`,
                                   confirmText: 'Scan again',
                                   type: 'is-warning',
                                   hasIcon: true,
