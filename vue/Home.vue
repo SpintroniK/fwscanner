@@ -5,7 +5,7 @@
       <div class="container">
         <div class="tabs is-centered">
           <ul>
-            <li> <a><strong>{{ appInstall }}</strong></a></li>
+            <li> <a @click="installApp"><strong>{{ appInstall }}</strong></a></li>
           </ul>
         </div>
       </div>
@@ -54,15 +54,31 @@ export default {
   data()
   {
     return {
-      appInstall: ''
+      appInstall: '',
+      deferredPrompt: null
+    }
+  },
+  methods:
+  {
+    installApp() {
+      this.deferredPrompt.prompt()
     }
   },
   mounted()
   {
+
+    window.addEventListener('beforeinstallprompt', e => {
+      // Prevent the mini-infobar from appearing on mobile
+      e.preventDefault();
+      // Stash the event so it can be triggered later.
+      this.deferredPrompt = e;
+      // Update UI notify the user they can install the PWA
+      this.appInstall = 'Install this app'
+    });
+
     if(!window.matchMedia('(display-mode: standalone)').matches) 
     {
-      // TODO: Add "Install App" link
-      this.appInstall = 'INSTALL APP'
+      // This means app is now installed
     }
   }
 }
