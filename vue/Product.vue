@@ -60,6 +60,9 @@ export default {
   {
     return {
       barcode: '',
+      interv: null,
+      t0: Date.now(),
+      timeout: 3000, // ms
       isLoading: true,
       productInfo: false,
       nutrimentsValues: {},
@@ -77,8 +80,38 @@ export default {
     async getProduct(id)
     {
       this.isLoading = true
+      this.t0 = Date.now()
+      this.interv = setInterval(async _ => 
+      {
+        const product_id = id;
+        const dt = Date.now() - this.t0
+        if(dt > this.timeout)
+        {
+          this.isLoading = false
+          this.$buefy.dialog.confirm({
+              title: 'API timed out',
+              message: `The API timed out.
+                        <br /> You can either retry or scan another product.`,
+              cancelText: 'Scan another product',
+              confirmText: 'Retry',
+              type: 'is-warning',
+              hasIcon: true,
+              onConfirm:  _ => location.reload(),
+              onCancel: _ => {this.$router.push({ name: 'home'})}
+            })
+
+          clearInterval(this.interv)
+        }
+      }, 20)
+
       const response = await fetch(`https://world.openfoodfacts.org/api/v0/product/${id}.json`)
       const data = await response.json()
+
+      clearInterval(this.interv)
+      if(Date.now() - this.t0 > this.timeout)
+      {
+        return
+      }
 
       if(data.status != 1)
       {
