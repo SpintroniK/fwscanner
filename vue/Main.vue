@@ -69,9 +69,6 @@ export default {
   $link-focus-border: $primary;
 
   @import "~bulma";
-  @import "~buefy/src/scss/components/_dialog.scss";
-  @import "~buefy/src/scss/components/_loading.scss";
-  @import "~buefy/src/scss/components/_progress.scss";
-  @import "~buefy/src/scss/utils/_all.scss";
+  @import "~buefy/src/scss/buefy.scss";
 
 </style>

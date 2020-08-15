@@ -62,6 +62,22 @@ export default {
   {
     installApp() {
       this.deferredPrompt.prompt()
+        // Wait for the user to respond to the prompt
+      this.deferredPrompt.userChoice.then(choiceResult => 
+      {
+        if(choiceResult.outcome === 'accepted') 
+        {
+          this.appInstall = ''
+          this.$buefy.snackbar.open({message: `Thanks for installing FWScanner! <br> Now you can start the app from your home screen.`,
+                                     position: 'is-top',
+                                     duration: 6000,
+                                     type: 'is-success'})
+        }
+        else 
+        {
+          console.log('User dismissed the install prompt');
+        }
+      });
     }
   },
   mounted()
