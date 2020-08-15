@@ -67,34 +67,44 @@ export default {
       {
         if(choiceResult.outcome === 'accepted') 
         {
-          this.appInstall = ''
-          this.$buefy.snackbar.open({message: `Thanks for installing FWScanner! <br> Now you can start the app from your home screen.`,
-                                     position: 'is-top',
-                                     duration: 6000,
-                                     type: 'is-success'})
+          this.installEvent('Now you can start the app from your home screen.')
         }
         else 
         {
           console.log('User dismissed the install prompt');
         }
       });
+    },
+    installEvent(msg)
+    {
+
+      this.appInstall = ''
+      this.$buefy.snackbar.open({message: msg,
+                                 position: 'is-top',
+                                 type: 'is-success'})
     }
   },
   mounted()
   {
 
-    window.addEventListener('beforeinstallprompt', e => {
+    window.addEventListener('beforeinstallprompt', e => 
+    {
       // Prevent the mini-infobar from appearing on mobile
-      e.preventDefault();
+      e.preventDefault()
       // Stash the event so it can be triggered later.
-      this.deferredPrompt = e;
+      this.deferredPrompt = e
       // Update UI notify the user they can install the PWA
       this.appInstall = 'Install this app'
     });
 
+    window.addEventListener('appinstalled', evt => 
+    {
+      this.installEvent('Thanks for installing FWScanner!')
+    });
+
     if(!window.matchMedia('(display-mode: standalone)').matches) 
     {
-      // This means app is now installed
+      // This means app is installed
     }
   }
 }
