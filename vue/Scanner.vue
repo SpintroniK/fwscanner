@@ -3,9 +3,6 @@
     <div id="scanner">
       <div id="info"></div>
       <div id="cameras"></div>
-      <div id="container">
-          <canvas id="displayCanvas"></canvas>
-      </div>
     </div>  
 
     <b-loading :is-full-page="true" :active.sync="isLoading" :can-cancel="false"></b-loading>
@@ -55,6 +52,45 @@ export default {
     {
       this.barcode = ''
       this.displayProduct = false
+
+    },
+    handleCanvasSize(stream)
+    {
+      
+      
+      // const vw = Math.max(document.documentElement.clientWidth || 0, window.innerWidth || 0)
+      // const vh = Math.max(document.documentElement.clientHeight || 0, window.innerHeight || 0)
+      // const cw = stream.video.videoWidth
+      // const ch = stream.video.videoHeight
+
+
+      // alert(`width = ${cw}, height = ${ch} / width = ${vw}, height = ${vh}`)
+
+      // // // Manage canvas size
+      // const displayCanvas = document.getElementById('displayCanvas')
+
+      // displayCanvas.style.position = 'fixed'
+
+      // const horitontalRatio = vw / cw
+      // const verticalRatio = vh / ch
+
+
+      // let ratio = Math.min(horitontalRatio, verticalRatio)
+
+      // const newWidth = parseInt(cw*ratio)
+      // const newHeight = parseInt(ch*ratio)
+
+      // const leftOffset = Math.max(0, parseInt((vw - newWidth) / 2))
+      // const topOffset = Math.max(0, parseInt((vh - newHeight) / 2))
+
+
+      // alert(`newWidth = ${newWidth}/${vw}, newHeight = ${newHeight}/${vh}`)
+
+      // displayCanvas.style.left = `${leftOffset}px`
+      // displayCanvas.style.top = `${topOffset}px`
+      // displayCanvas.style.width = `${newWidth}px`
+      // displayCanvas.style.height = `${newHeight}px`
+      // displayCanvas.style.objectFit = 'fill'
 
     },
     async startScanner()
@@ -115,9 +151,10 @@ export default {
         this.showCamError()
       }
 
+
       // Hide video
-      stream.video.style.width = '1px';
-      stream.video.style.height = '1px';
+      // stream.video.style.width = '1px';
+      // stream.video.style.height = '1px';
       // Hide video
       stream.canvas.style.width = '1px';
       stream.canvas.style.height = '1px';
@@ -125,9 +162,14 @@ export default {
       // Hide canvas
       stream.canvas.style.display = 'block';
 
-      const displayCanvas = document.getElementById('displayCanvas');
+      this.handleCanvasSize(stream)
+      window.addEventListener("orientationchange", _ =>
+      {
+        setTimeout(_ => this.handleCanvasSize(stream), 500)
+      }, false)
 
-      const barcordReader = new BarcodeReader({drawRect: true, drawingCanvas: displayCanvas});
+
+      const barcordReader = new BarcodeReader({drawRect: false});
       
       const resultCallback = d => 
       {
@@ -167,25 +209,17 @@ export default {
 
 <style>
 
+  #scanner
+  {
+    background-color: #141418;
+  }
   video
   {
       position: fixed;
       top: 0;
       left: 0;
-  }
-  #container
-  {
-    background-color: #141418;
-    position: fixed;
-    top: 0;
-    left: 0;
-    min-width: 100vw;
-    min-height: 100vh;
+      object-fit: contain;
   }
 
-  #displayCanvas
-  {
-    object-fit: contain;
-  }
 
 </style>

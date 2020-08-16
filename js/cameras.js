@@ -93,7 +93,8 @@ export default class Camera
 
     Stop()
     {
-        this.stream.pause();
+        this.stream.pause()
+        this.stream.remove()
     }
 
 }
